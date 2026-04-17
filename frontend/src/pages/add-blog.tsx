@@ -70,24 +70,17 @@ function AddBlog() {
   const handleCheckboxChange = () => {
     setFormData({ ...formData, isFeaturedPost: !formData.isFeaturedPost });
   };
-  const validateFormData = () => {
-    if (
-      !formData.title ||
-      !formData.authorName ||
-      !formData.imageLink ||
-      !formData.description ||
-      formData.categories.length === 0
-    ) {
-      toast.error('All fields must be filled out.');
+const validateFormData = () => {
+    // Only check for the fields you ABSOLUTELY need
+    if (!formData.title || !formData.description) {
+      toast.error('Title and Content are required.');
       return false;
     }
+    
+    // Optional: Keep the image format check only IF a link is actually provided
     const imageLinkRegex = /\.(jpg|jpeg|png|webp)$/i;
-    if (!imageLinkRegex.test(formData.imageLink)) {
+    if (formData.imageLink && !imageLinkRegex.test(formData.imageLink)) {
       toast.error('Image URL must end with .jpg, .jpeg, .webp or .png');
-      return false;
-    }
-    if (formData.categories.length > 3) {
-      toast.error('Select up to three categories.');
       return false;
     }
 
