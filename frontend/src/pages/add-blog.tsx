@@ -70,17 +70,24 @@ function AddBlog() {
   const handleCheckboxChange = () => {
     setFormData({ ...formData, isFeaturedPost: !formData.isFeaturedPost });
   };
-const validateFormData = () => {
-    // Only check for the fields you ABSOLUTELY need
-    if (!formData.title || !formData.description) {
-      toast.error('Title and Content are required.');
+  const validateFormData = () => {
+    if (
+      !formData.title ||
+      !formData.authorName ||
+      !formData.imageLink ||
+      !formData.description ||
+      formData.categories.length === 0
+    ) {
+      toast.error('All fields must be filled out.');
       return false;
     }
-    
-    // Optional: Keep the image format check only IF a link is actually provided
     const imageLinkRegex = /\.(jpg|jpeg|png|webp)$/i;
-    if (formData.imageLink && !imageLinkRegex.test(formData.imageLink)) {
+    if (!imageLinkRegex.test(formData.imageLink)) {
       toast.error('Image URL must end with .jpg, .jpeg, .webp or .png');
+      return false;
+    }
+    if (formData.categories.length > 3) {
+      toast.error('Select up to three categories.');
       return false;
     }
 
@@ -149,7 +156,7 @@ const validateFormData = () => {
 
           <div className="mb-2">
             <div className="px-2 py-1 font-medium text-light-secondary dark:text-dark-secondary">
-              Blog title 
+              Blog title <Asterisk />
             </div>
             <input
               type="text"
@@ -164,7 +171,7 @@ const validateFormData = () => {
 
           <div className="mb-1">
             <div className="px-2 py-1 font-medium text-light-secondary dark:text-dark-secondary">
-              Blog content 
+              Blog content <Asterisk />
             </div>
             <textarea
               name="description"
@@ -178,7 +185,7 @@ const validateFormData = () => {
 
           <div className="mb-2">
             <div className="px-2 py-1 font-medium text-light-secondary dark:text-dark-secondary">
-              Author name 
+              Author name <Asterisk />
             </div>
             <input
               type="text"
@@ -195,7 +202,7 @@ const validateFormData = () => {
             <span className="text-xs tracking-wide text-dark-tertiary">
               &nbsp;(jpg/png/webp)&nbsp;
             </span>
-            
+            <Asterisk />
           </div>
           <div className="mb-4 flex justify-between gap-2 md:gap-4">
             <input
@@ -224,7 +231,7 @@ const validateFormData = () => {
               <span className="text-xs tracking-wide text-dark-tertiary">
                 &nbsp;(max 3 categories)&nbsp;
               </span>
-              
+              <Asterisk />
             </label>
             <div className="flex flex-wrap gap-3 rounded-lg p-2 dark:bg-dark-card dark:p-3">
               {categories.map((category, index) => (
